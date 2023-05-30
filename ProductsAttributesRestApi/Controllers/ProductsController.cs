@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Services;
+using ProductsAttributesRestApi.Services.Impl;
 
 namespace ProductsAttributesRestApi.Controllers;
 
@@ -41,6 +42,18 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<List<ProductResponse>>> FilterProducts([FromBody] ProductFilterRequest filter)
     {
         var result = await _productService.FilterProducts(filter);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<List<ProductResponse>>> AddProduct([FromBody] ProductRequest productRequest)
+    {
+        if (productRequest is null || !ModelState.IsValid)
+            return BadRequest();
+
+        var result = await _productService.AddProduct(productRequest);
         return Ok(result);
     }
 }

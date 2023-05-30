@@ -21,9 +21,11 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         return await _dataContext.Products.FindAsync(id);
     }
 
-    public Task<List<Product>> AddProduct(Product product)
+    public async Task<List<Product>> AddProduct(Product product)
     {
-        throw new NotImplementedException();
+        _dataContext.Products.Add(product);
+        _dataContext.SaveChanges();
+        return await _dataContext.Products.ToListAsync();
     }
 
     public Task<List<Product>?> UpdateProduct(int id, Product product)

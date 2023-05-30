@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ProductsAttributesRestApi.Models.Dtos;
+using ProductsAttributesRestApi.Models.Entities;
 using ProductsAttributesRestApi.Repositories;
 
 namespace ProductsAttributesRestApi.Services.Impl;
@@ -27,9 +28,11 @@ public class ProductsService : IProductService
         return _mapper.Map<ProductResponse>(result);
     }
 
-    public Task<List<ProductResponse>> AddProduct(ProductRequest productRequest)
+    public async Task<List<ProductResponse>> AddProduct(ProductRequest productRequest)
     {
-        throw new NotImplementedException();
+        var product = _mapper.Map<Product>(productRequest);
+        var result = await _productsRepository.AddProduct(product);
+        return _mapper.Map<List<ProductResponse>>(result);
     }
 
     public Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest)

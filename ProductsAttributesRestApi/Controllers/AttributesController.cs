@@ -44,7 +44,7 @@ public class AttributesController : ControllerBase
     public async Task<ActionResult<List<AttributeResponse>>> AddAttribute([FromBody] AttributeRequest attributeRequest)
     {
         
-        if ((attributeRequest is null) || !ModelState.IsValid)
+        if (attributeRequest is null || !ModelState.IsValid)
             return BadRequest();
 
         var result = await _attributeService.AddAttribute(attributeRequest);
