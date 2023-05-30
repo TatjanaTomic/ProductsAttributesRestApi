@@ -10,27 +10,27 @@ public class ProductsRepository : BaseRepository, IProductsRepository
     {
     }
 
-    async Task<List<Product>> IProductsRepository.GetAllProducts()
+    public async Task<List<Product>> GetAllProducts()
     {
         return await _dataContext.Products.ToListAsync();
     }
 
-    Task<Product?> IProductsRepository.GetProductById(int id)
+    public async Task<Product?> GetProductById(int id)
+    {
+        return await _dataContext.Products.FindAsync(id);
+    }
+
+    public Task<List<Product>> AddProduct(Product product)
     {
         throw new NotImplementedException();
     }
 
-    Task<List<Product>> IProductsRepository.AddProduct(Product product)
+    public Task<List<Product>?> UpdateProduct(int id, Product product)
     {
         throw new NotImplementedException();
     }
 
-    Task<List<Product>?> IProductsRepository.UpdateProduct(int id, Product product)
-    {
-        throw new NotImplementedException();
-    }
-
-    Task<List<Product>?> IProductsRepository.DeleteProduct(int id)
+    public Task<List<Product>?> DeleteProduct(int id)
     {
         throw new NotImplementedException();
     }

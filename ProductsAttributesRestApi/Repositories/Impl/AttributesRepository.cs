@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsAttributesAPI.Data;
-using System.ComponentModel;
 
 namespace ProductsAttributesRestApi.Repositories.Impl;
 

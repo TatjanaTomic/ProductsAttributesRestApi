@@ -21,9 +21,10 @@ public class ProductsService : IProductService
         return _mapper.Map<List<ProductResponse>>(result);
     }
 
-    public Task<ProductResponse> GetProductById(int id)
+    public async Task<ProductResponse> GetProductById(int id)
     {
-        throw new NotImplementedException();
+        var result = await _productsRepository.GetProductById(id);
+        return _mapper.Map<ProductResponse>(result);
     }
 
     public Task<List<ProductResponse>> AddProduct(ProductRequest productRequest)
