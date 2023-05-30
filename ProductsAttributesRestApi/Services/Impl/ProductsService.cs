@@ -42,4 +42,9 @@ public class ProductsService : IProductService
         throw new NotImplementedException();
     }
 
+    public async Task<List<ProductResponse>> FilterProducts(ProductFilterRequest filter)
+    {
+        var result = await _productsRepository.FilterProducts(filter);
+        return _mapper.Map<List<ProductResponse>>(result);
+    }
 }

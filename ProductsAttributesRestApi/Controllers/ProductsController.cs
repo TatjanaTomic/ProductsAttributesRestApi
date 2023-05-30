@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Services;
-using ProductsAttributesRestApi.Services.Impl;
 
 namespace ProductsAttributesRestApi.Controllers;
 
@@ -27,13 +26,21 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ProductResponse>> GetAttributeById(int id)
+    public async Task<ActionResult<ProductResponse>> GetProductById(int id)
     {
         var result = await _productService.GetProductById(id);
 
         if (result is null)
             return NotFound();
 
+        return Ok(result);
+    }
+
+    [HttpPost("filter")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<List<ProductResponse>>> FilterProducts([FromBody] ProductFilterRequest filter)
+    {
+        var result = await _productService.FilterProducts(filter);
         return Ok(result);
     }
 }
