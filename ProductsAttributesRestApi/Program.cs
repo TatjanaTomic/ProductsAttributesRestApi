@@ -1,5 +1,12 @@
+global using Attribute = ProductsAttributesRestApi.Models.Entities.Attribute;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ProductsAttributesAPI.Data;
+using ProductsAttributesRestApi.Models;
+using ProductsAttributesRestApi.Repositories;
+using ProductsAttributesRestApi.Repositories.Impl;
+using ProductsAttributesRestApi.Services;
+using ProductsAttributesRestApi.Services.Impl;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +16,21 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<DataContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+builder.Services.AddSingleton(mapperConfig.CreateMapper());
+
+builder.Services.AddScoped<IAttributesRepository, AttributesRepository>();
+builder.Services.AddScoped<IAttributesService, AttributesService>();
+
 
 var app = builder.Build();
 

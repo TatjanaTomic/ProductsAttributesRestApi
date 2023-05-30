@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsAttributesRestApi.Models.Entities;
-using System.Collections.Generic;
-using Attribute = ProductsAttributesRestApi.Models.Entities.Attribute;
 
 namespace ProductsAttributesAPI.Data;
 
