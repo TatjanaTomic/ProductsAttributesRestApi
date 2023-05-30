@@ -18,6 +18,7 @@ public class AttributesController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<AttributeResponse>>> GetAllAttributes()
     {
         var result = await _attributeService.GetAllAttributes();
@@ -25,6 +26,8 @@ public class AttributesController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AttributeResponse>> GetAttributeById(int id)
     {
         var result = await _attributeService.GetAttributeById(id);
@@ -36,6 +39,8 @@ public class AttributesController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<AttributeResponse>>> AddAttribute([FromBody] AttributeRequest attributeRequest)
     {
         
@@ -47,6 +52,8 @@ public class AttributesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<AttributeResponse>?>> UpdateAttribute(int id, [FromBody] AttributeRequest attributeRequest)
     {
         var result = await _attributeService.UpdateAttribute(id, attributeRequest);
@@ -58,6 +65,8 @@ public class AttributesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<AttributeResponse>?>> DeleteAttribute(int id)
     {
         var result = await _attributeService.DeleteAttribute(id);
