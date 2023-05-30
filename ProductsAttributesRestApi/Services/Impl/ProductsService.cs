@@ -35,14 +35,26 @@ public class ProductsService : IProductService
         return _mapper.Map<List<ProductResponse>>(result);
     }
 
-    public Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest)
+    public async Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest)
     {
-        throw new NotImplementedException();
+        var product = _mapper.Map<Product>(productRequest);
+        product.Id = id;
+
+        var result = await _productsRepository.UpdateProduct(id, product);
+        if (result is null)
+            return null;
+
+        return _mapper.Map<List<ProductResponse>>(result);
     }
 
-    public Task<List<ProductResponse>?> DeleteProduct(int id)
+    public async Task<List<ProductResponse>?> DeleteProduct(int id)
     {
-        throw new NotImplementedException();
+        var result = await _productsRepository.DeleteProduct(id);
+
+        if (result is null)
+            return null;
+
+        return _mapper.Map<List<ProductResponse>>(result);
     }
 
     public async Task<List<ProductResponse>> FilterProducts(ProductFilterRequest filter)

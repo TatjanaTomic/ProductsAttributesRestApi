@@ -56,4 +56,31 @@ public class ProductsController : ControllerBase
         var result = await _productService.AddProduct(productRequest);
         return Ok(result);
     }
+
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<ProductResponse>?>> UpdateProduct(int id, ProductRequest product)
+    {
+        var result = await _productService.UpdateProduct(id, product);
+
+        if(result is null)
+            return NotFound();
+
+        return Ok(result);
+    }
+
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<List<ProductResponse>?>> DeleteProduct(int id)
+    {
+        var result = await _productService.DeleteProduct(id);
+
+        if (result is null)
+            return NotFound();
+
+        return Ok(result);
+    }
 }
