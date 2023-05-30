@@ -29,8 +29,9 @@ var mapperConfig = new MapperConfiguration(mc =>
 builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
 builder.Services.AddScoped<IAttributesRepository, AttributesRepository>();
+builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
 builder.Services.AddScoped<IAttributesService, AttributesService>();
-
+builder.Services.AddScoped<IProductService, ProductsService>();
 
 var app = builder.Build();
 
