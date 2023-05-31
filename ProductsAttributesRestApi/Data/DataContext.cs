@@ -31,7 +31,8 @@ public class DataContext : DbContext
         base.OnModelCreating(modelBuilder);
     }
 
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Attribute> Attributes { get; set; }
-    public DbSet<ProductAttribute> ProductAttributes { get; set; }
+    public DbSet<Product> Products { get; set; } = null!;
+    public DbSet<Attribute> Attributes { get; set; } = null!;
+    public DbSet<ProductAttribute> ProductAttributes { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 }
