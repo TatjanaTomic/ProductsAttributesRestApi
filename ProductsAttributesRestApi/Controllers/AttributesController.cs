@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ProductsAttributesRestApi.Models.Dtos;
-using ProductsAttributesRestApi.Repositories;
 using ProductsAttributesRestApi.Services;
 
 namespace ProductsAttributesRestApi.Controllers;
@@ -43,7 +41,6 @@ public class AttributesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<List<AttributeResponse>>> AddAttribute([FromBody] AttributeRequest attributeRequest)
     {
-        
         if (attributeRequest is null || !ModelState.IsValid)
             return BadRequest();
 
@@ -53,9 +50,13 @@ public class AttributesController : ControllerBase
 
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<List<AttributeResponse>?>> UpdateAttribute(int id, [FromBody] AttributeRequest attributeRequest)
     {
+        if (attributeRequest is null || !ModelState.IsValid)
+            return BadRequest();
+
         var result = await _attributeService.UpdateAttribute(id, attributeRequest);
 
         if (result is null)

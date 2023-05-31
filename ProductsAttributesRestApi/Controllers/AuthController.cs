@@ -22,9 +22,12 @@ namespace ProductsAttributesRestApi.Controllers
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<UserResponse>>> Register(UserRequest userRequest)
+        public async Task<ActionResult<List<UserResponse>>> Register([FromBody] UserRequest userRequest)
         {
-            if(!userRequest.Password.Equals(userRequest.RepeatedPassword))
+            if (userRequest is null || !ModelState.IsValid)
+                return BadRequest();
+
+            if (!userRequest.Password.Equals(userRequest.RepeatedPassword))
             {
                 return BadRequest(WRONG_PASSWORDS);
             }
@@ -38,8 +41,13 @@ namespace ProductsAttributesRestApi.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(UserLoginRequest userLoginRequest)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<string>> Login([FromBody] UserLoginRequest userLoginRequest)
         {
+            if (userLoginRequest is null || !ModelState.IsValid)
+                return BadRequest();
+
             var token = await _authService.LoginUser(userLoginRequest);
 
             if (token is null)

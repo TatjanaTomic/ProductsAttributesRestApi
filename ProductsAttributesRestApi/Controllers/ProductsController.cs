@@ -41,6 +41,9 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<List<ProductResponse>>> FilterProducts([FromBody] ProductFilterRequest filter)
     {
+        if (filter is null || !ModelState.IsValid)
+            return BadRequest();
+
         var result = await _productService.FilterProducts(filter);
         return Ok(result);
     }
@@ -60,8 +63,11 @@ public class ProductsController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<ProductResponse>?>> UpdateProduct(int id, ProductRequest product)
+    public async Task<ActionResult<List<ProductResponse>?>> UpdateProduct(int id, [FromBody] ProductRequest product)
     {
+        if (product is null || !ModelState.IsValid)
+            return BadRequest();
+
         var result = await _productService.UpdateProduct(id, product);
 
         if(result is null)
