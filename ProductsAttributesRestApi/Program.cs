@@ -30,8 +30,11 @@ builder.Services.AddSingleton(mapperConfig.CreateMapper());
 
 builder.Services.AddScoped<IAttributesRepository, AttributesRepository>();
 builder.Services.AddScoped<IProductsRepository, ProductsRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
 builder.Services.AddScoped<IAttributesService, AttributesService>();
 builder.Services.AddScoped<IProductService, ProductsService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 
