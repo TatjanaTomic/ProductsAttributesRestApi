@@ -22,7 +22,7 @@ public class MappingProfile : Profile
         CreateMap<UserRequest, User>();
         CreateMap<User, UserResponse>();
         CreateMap<UserResponse, User>();
-        CreateMap<User, UserLoginRequest>();
-        CreateMap<UserLoginRequest, User>();
+        CreateMap<User, AuthRequest>();
+        CreateMap<AuthRequest, User>();
     }
 }

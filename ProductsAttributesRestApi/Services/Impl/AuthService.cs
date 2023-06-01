@@ -24,7 +24,7 @@ public class AuthService : IAuthService
 
     public async Task<List<UserResponse>> RegisterUser(UserRequest userRequest)
     {
-        if(await _usersRepository.GetUserByEmail(userRequest.Email) != null)
+        if (await _usersRepository.GetUserByEmail(userRequest.Email) != null)
         {
             //vec je registrovan
             return null;
@@ -39,7 +39,7 @@ public class AuthService : IAuthService
         return _mapper.Map<List<UserResponse>>(result);
     }
 
-    public async Task<string> LoginUser(UserLoginRequest userLoginRequest)
+    public async Task<AuthResponse> LoginUser(AuthRequest userLoginRequest)
     {
         var user = await _usersRepository.GetUserByEmail(userLoginRequest.Email);
 
@@ -49,29 +49,44 @@ public class AuthService : IAuthService
             return null;
         }
 
-        return CreateToken(user);
+        var token = CreateToken(user);
+        return new AuthResponse() { Token = token };
     }
 
     private string CreateToken(User user)
     {
         List<Claim> claims = new()
         {
-                new Claim(ClaimTypes.Name, user.Email)
-            };
+            new Claim(JwtRegisteredClaimNames.Sub, "User ID: " + user.Id),
+            new Claim(JwtRegisteredClaimNames.Name, user.FirstName + " " + user.LastName),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // jwt id - unique identifier at for the jwt
+            new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString()) // issued at - the time at which the jwt was issued
+        };
+
+        var expirationDate = DateTime.Now.AddDays(1);
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
             _configuration.GetSection("JwtConfig:SecretKey").Value!));
-
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
+        /* var tokenDescriptor = new SecurityTokenDescriptor()
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = expirationDate,
+            SigningCredentials = credentials
+        }; */
+
         var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: credentials
-            );
+            claims: claims,
+            expires: expirationDate,
+            signingCredentials: credentials
+        );
 
-        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+        /* var tokenHandler = new JwtSecurityTokenHandler();
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var jwt = tokenHandler.WriteToken(token); */
 
-        return jwt;
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

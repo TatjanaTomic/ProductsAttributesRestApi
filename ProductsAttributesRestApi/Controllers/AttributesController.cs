@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Services;
 
 namespace ProductsAttributesRestApi.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
 public class AttributesController : ControllerBase
@@ -17,6 +20,7 @@ public class AttributesController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<AttributeResponse>>> GetAllAttributes()
     {
         var result = await _attributeService.GetAllAttributes();
@@ -26,6 +30,7 @@ public class AttributesController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AttributeResponse>> GetAttributeById(int id)
     {
         var result = await _attributeService.GetAttributeById(id);
@@ -39,6 +44,7 @@ public class AttributesController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<AttributeResponse>>> AddAttribute([FromBody] AttributeRequest attributeRequest)
     {
         if (attributeRequest is null || !ModelState.IsValid)
@@ -52,6 +58,7 @@ public class AttributesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<AttributeResponse>?>> UpdateAttribute(int id, [FromBody] AttributeRequest attributeRequest)
     {
         if (attributeRequest is null || !ModelState.IsValid)
@@ -68,6 +75,7 @@ public class AttributesController : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<AttributeResponse>?>> DeleteAttribute(int id)
     {
         var result = await _attributeService.DeleteAttribute(id);

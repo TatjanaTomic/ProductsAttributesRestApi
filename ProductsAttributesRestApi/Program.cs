@@ -1,12 +1,16 @@
 global using Attribute = ProductsAttributesRestApi.Models.Entities.Attribute;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProductsAttributesAPI.Data;
 using ProductsAttributesRestApi.Models;
 using ProductsAttributesRestApi.Repositories;
 using ProductsAttributesRestApi.Repositories.Impl;
 using ProductsAttributesRestApi.Services;
 using ProductsAttributesRestApi.Services.Impl;
+using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +40,29 @@ builder.Services.AddScoped<IAttributesService, AttributesService>();
 builder.Services.AddScoped<IProductService, ProductsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(jwt =>
+    {
+        var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:SecretKey").Value!);
+
+        jwt.SaveToken = true; //save in header of requests
+        jwt.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RequireExpirationTime = false,
+            ValidateLifetime = true
+        };
+    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,6 +74,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

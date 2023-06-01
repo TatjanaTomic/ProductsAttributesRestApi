@@ -43,17 +43,17 @@ namespace ProductsAttributesRestApi.Controllers
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<string>> Login([FromBody] UserLoginRequest userLoginRequest)
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] AuthRequest userLoginRequest)
         {
             if (userLoginRequest is null || !ModelState.IsValid)
                 return BadRequest();
 
-            var token = await _authService.LoginUser(userLoginRequest);
+            var result = await _authService.LoginUser(userLoginRequest);
 
-            if (token is null)
+            if (result is null)
                 return BadRequest(WRONG_CREDENTIALS);
 
-            return Ok(token);
+            return Ok(result);
         }
     }
 }
