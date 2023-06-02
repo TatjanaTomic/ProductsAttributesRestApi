@@ -19,11 +19,11 @@ public class AttributesRepository : BaseRepository, IAttributesRepository
         return await _dataContext.Attributes.FindAsync(id);
     }
 
-    public async Task<List<Attribute>> AddAttribute(Attribute attribute)
+    public async Task<Attribute> AddAttribute(Attribute attribute)
     {
-        _dataContext.Attributes.Add(attribute);
+        var attributeEntity = await _dataContext.Attributes.AddAsync(attribute);
         _dataContext.SaveChanges();
-        return await _dataContext.Attributes.ToListAsync();
+        return attributeEntity.Entity;
     }
 
     public async Task<List<Attribute>?> UpdateAttribute(int id, Attribute attribute)

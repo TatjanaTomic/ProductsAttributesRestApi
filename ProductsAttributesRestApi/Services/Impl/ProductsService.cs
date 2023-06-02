@@ -19,13 +19,28 @@ public class ProductsService : IProductService
     public async Task<List<ProductResponse>> GetAllProducts()
     {
         var result = await _productsRepository.GetAllProducts();
-        return _mapper.Map<List<ProductResponse>>(result);
+        var products = _mapper.Map<List<ProductResponse>>(result);
+        foreach(var p  in products)
+        {
+            p.AttributesValues = _mapper.Map<List<AttributeValue>>(await _productsRepository.GetProductAttributes(p.Id));
+        }
+
+        return products;
     }
 
     public async Task<ProductResponse> GetProductById(int id)
     {
         var result = await _productsRepository.GetProductById(id);
         return _mapper.Map<ProductResponse>(result);
+
+        /*
+         * var result = _mapper.Map<ProductResponse>(await _productsRepository.GetProductById(id));
+        if(result is not null)
+        {
+            result.AttributesValues = _mapper.Map<List<AttributeValue>>(await _productsRepository.GetProductAttributes(result.Id));
+        }
+        return result;
+        */
     }
 
     public async Task<List<ProductResponse>> AddProduct(ProductRequest productRequest)

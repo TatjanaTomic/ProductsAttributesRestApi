@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ProductsAttributesRestApi.Exceptions;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Models.Entities;
 using ProductsAttributesRestApi.Repositories;
@@ -9,6 +10,8 @@ namespace ProductsAttributesRestApi.Services.Impl;
 
 public class AttributesService : IAttributesService
 {
+    private static readonly string ALREADY_EXISTS = "Attribute already exists.";
+
     private readonly IAttributesRepository _attributesRepository;
     private readonly IMapper _mapper;
 
@@ -20,21 +23,19 @@ public class AttributesService : IAttributesService
 
     public async Task<List<AttributeResponse>> GetAllAttributes()
     {
-        var result = await _attributesRepository.GetAllAttributes();
-        return _mapper.Map<List<AttributeResponse>>(result);
+        return _mapper.Map<List<AttributeResponse>>(await _attributesRepository.GetAllAttributes());
     }
 
     public async Task<AttributeResponse> GetAttributeById(int id)
     {
-        var result = await _attributesRepository.GetAttributeById(id);
-        return _mapper.Map<AttributeResponse>(result);
+        return _mapper.Map<AttributeResponse>(await _attributesRepository.GetAttributeById(id));
     }
 
-    public async Task<List<AttributeResponse>> AddAttribute(AttributeRequest attributeRequest)
+    public async Task<AttributeResponse> AddAttribute(AttributeRequest attributeRequest)
     {
         var attribute = _mapper.Map<Attribute>(attributeRequest);
         var result = await _attributesRepository.AddAttribute(attribute);
-        return _mapper.Map<List<AttributeResponse>>(result);
+        return _mapper.Map<AttributeResponse>(result);
     }
 
     public async Task<List<AttributeResponse>?> UpdateAttribute(int id, AttributeRequest attributeRequest)

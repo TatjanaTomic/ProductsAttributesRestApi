@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using ProductsAttributesRestApi.Exceptions;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Services;
 
 namespace ProductsAttributesRestApi.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
 public class AttributesController : ControllerBase
@@ -23,8 +24,7 @@ public class AttributesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<AttributeResponse>>> GetAllAttributes()
     {
-        var result = await _attributeService.GetAllAttributes();
-        return Ok(result);
+        return Ok(await _attributeService.GetAllAttributes());
     }
 
     [HttpGet("{id}")]
@@ -45,7 +45,7 @@ public class AttributesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<AttributeResponse>>> AddAttribute([FromBody] AttributeRequest attributeRequest)
+    public async Task<ActionResult<AttributeResponse>> AddAttribute([FromBody] AttributeRequest attributeRequest)
     {
         if (attributeRequest is null || !ModelState.IsValid)
             return BadRequest();
