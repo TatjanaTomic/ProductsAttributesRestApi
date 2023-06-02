@@ -64,12 +64,16 @@ public class AttributesController : ControllerBase
         if (attributeRequest is null || !ModelState.IsValid)
             return BadRequest();
 
-        var result = await _attributeService.UpdateAttribute(id, attributeRequest);
-
-        if (result is null)
+        try
+        {
+            var result = await _attributeService.UpdateAttribute(id, attributeRequest);
+            return Ok(result);
+        }
+        catch(NotFoundException)
+        {
             return NotFound();
+        }
 
-        return Ok(result);
     }
 
     [HttpDelete("{id}")]

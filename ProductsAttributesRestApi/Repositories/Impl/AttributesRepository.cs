@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsAttributesAPI.Data;
+using ProductsAttributesRestApi.Exceptions;
 
 namespace ProductsAttributesRestApi.Repositories.Impl;
 
@@ -26,19 +27,16 @@ public class AttributesRepository : BaseRepository, IAttributesRepository
         return attributeEntity.Entity;
     }
 
-    public async Task<List<Attribute>?> UpdateAttribute(int id, Attribute attribute)
+    public async Task<Attribute> UpdateAttribute(int id, Attribute attribute)
     {
-        var result = _dataContext.Attributes.Find(id);
-
-        if (result is null)
-            return null;
-
+        var result = await _dataContext.Attributes.FindAsync(id);
+        
         result.Name = attribute.Name;
         result.Units = attribute.Units;
 
         _dataContext.SaveChanges();
 
-        return await _dataContext.Attributes.ToListAsync();
+        return result;
     }
 
     public async Task<List<Attribute>?> DeleteAttribute(int id)

@@ -38,16 +38,16 @@ public class AttributesService : IAttributesService
         return _mapper.Map<AttributeResponse>(result);
     }
 
-    public async Task<List<AttributeResponse>?> UpdateAttribute(int id, AttributeRequest attributeRequest)
+    public async Task<AttributeResponse> UpdateAttribute(int id, AttributeRequest attributeRequest)
     {
+        if(await _attributesRepository.GetAttributeById(id) is null)
+            throw new NotFoundException();
+
         var attribute = _mapper.Map<Attribute>(attributeRequest);
         attribute.Id = id;
 
         var result = await _attributesRepository.UpdateAttribute(id, attribute);
-        if (result is null)
-            return null;
-
-        return _mapper.Map<List<AttributeResponse>>(result);
+        return _mapper.Map<AttributeResponse>(result);
     }
 
     public async Task<List<AttributeResponse>?> DeleteAttribute(int id)
