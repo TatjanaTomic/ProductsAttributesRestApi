@@ -5,5 +5,5 @@ namespace ProductsAttributesRestApi.Repositories;
 public interface IUsersRepository
 {
     Task<User?> GetUserByEmail(string email);
-    Task<List<User>> AddUser(User user);
+    Task<User> AddUser(User user);
 }

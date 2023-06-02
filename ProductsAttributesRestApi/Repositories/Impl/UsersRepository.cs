@@ -11,11 +11,11 @@ namespace ProductsAttributesRestApi.Repositories.Impl
         {
         }
 
-        public async Task<List<User>> AddUser(User user)
+        public async Task<User> AddUser(User user)
         {
-            _dataContext.Users.Add(user);
+            var userEntity = await _dataContext.Users.AddAsync(user);
             _dataContext.SaveChanges();
-            return await _dataContext.Users.ToListAsync();        }
+            return userEntity.Entity;        }
 
         public async Task<User?> GetUserByEmail(string email)
         {

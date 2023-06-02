@@ -28,7 +28,7 @@ public class AuthService : IAuthService
         _configuration = configuration;
     }
 
-    public async Task<List<UserResponse>> RegisterUser(UserRequest userRequest)
+    public async Task<UserResponse> RegisterUser(UserRequest userRequest)
     {
         if (!IsEmailValid(userRequest.Email))
         {
@@ -46,7 +46,7 @@ public class AuthService : IAuthService
         user.PasswordHash = passwordHash;
 
         var result = await _usersRepository.AddUser(user);
-        return _mapper.Map<List<UserResponse>>(result);
+        return _mapper.Map<UserResponse>(result);
     }
 
     public async Task<AuthResponse> LoginUser(AuthRequest userLoginRequest)
@@ -91,17 +91,6 @@ public class AuthService : IAuthService
 
     private static bool IsEmailValid(string email)
     {
-        var valid = true;
-
-        try
-        {
-            var emailAddress = new MailAddress(email);
-        }
-        catch
-        {
-            valid = false;
-        }
-
-        return valid;
+        return MailAddress.TryCreate(email, out _);
     }
 }

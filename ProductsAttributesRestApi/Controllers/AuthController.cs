@@ -21,7 +21,7 @@ namespace ProductsAttributesRestApi.Controllers
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<List<UserResponse>>> Register([FromBody] UserRequest userRequest)
+        public async Task<ActionResult<UserResponse>> Register([FromBody] UserRequest userRequest)
         {
             if (userRequest is null || !ModelState.IsValid)
                 return BadRequest();
