@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
+using ProductsAttributesRestApi.Exceptions;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Models.Entities;
 using ProductsAttributesRestApi.Repositories;
@@ -11,6 +12,9 @@ namespace ProductsAttributesRestApi.Services.Impl;
 
 public class AuthService : IAuthService
 {
+    private readonly static string WRONG_CREDENTIALS = "Wrong email or password.";
+    private readonly static string EMAIL_TAKEN = "Email is already in use.";
+
     private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
     private readonly IConfiguration _configuration;
@@ -26,8 +30,7 @@ public class AuthService : IAuthService
     {
         if (await _usersRepository.GetUserByEmail(userRequest.Email) != null)
         {
-            //vec je registrovan
-            return null;
+            throw new AuthException(EMAIL_TAKEN);
         }
 
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(userRequest.Password);
@@ -46,7 +49,7 @@ public class AuthService : IAuthService
         // there is no registered user with entered email or entered password is incorrect
         if (user is null || !BCrypt.Net.BCrypt.Verify(userLoginRequest.Password, user.PasswordHash))
         {
-            return null;
+            throw new AuthException(WRONG_CREDENTIALS);
         }
 
         var token = CreateToken(user);

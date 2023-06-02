@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAttributesRestApi.Exceptions;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Services;
 
@@ -9,8 +10,6 @@ namespace ProductsAttributesRestApi.Controllers
     public class AuthController : ControllerBase
     {
         private readonly static string WRONG_PASSWORDS = "Passwords do not match.";
-        private readonly static string WRONG_CREDENTIALS = "Wrong email or password.";
-        private readonly static string EMAIL_TAKEN = "Email is already in use.";
 
         private readonly IAuthService _authService;
 
@@ -32,12 +31,15 @@ namespace ProductsAttributesRestApi.Controllers
                 return BadRequest(WRONG_PASSWORDS);
             }
 
-            var result = await _authService.RegisterUser(userRequest);
-
-            if (result is null)
-                return BadRequest(EMAIL_TAKEN);
-
-            return Ok(result);
+            try
+            {
+                var result = await _authService.RegisterUser(userRequest);
+                return Ok(result);
+            }
+            catch(AuthException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("login")]
@@ -48,12 +50,15 @@ namespace ProductsAttributesRestApi.Controllers
             if (userLoginRequest is null || !ModelState.IsValid)
                 return BadRequest();
 
-            var result = await _authService.LoginUser(userLoginRequest);
-
-            if (result is null)
-                return BadRequest(WRONG_CREDENTIALS);
-
-            return Ok(result);
+            try
+            {
+                var result = await _authService.LoginUser(userLoginRequest);
+                return Ok(result);
+            }
+            catch(AuthException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
