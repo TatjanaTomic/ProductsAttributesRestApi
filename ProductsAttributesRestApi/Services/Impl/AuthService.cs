@@ -5,6 +5,7 @@ using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Models.Entities;
 using ProductsAttributesRestApi.Repositories;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Text;
 
@@ -14,6 +15,7 @@ public class AuthService : IAuthService
 {
     private readonly static string WRONG_CREDENTIALS = "Wrong email or password.";
     private readonly static string EMAIL_TAKEN = "Email is already in use.";
+    private readonly static string EMAIL_FORMAT = "Email format is not valid.";
 
     private readonly IUsersRepository _usersRepository;
     private readonly IMapper _mapper;
@@ -28,6 +30,11 @@ public class AuthService : IAuthService
 
     public async Task<List<UserResponse>> RegisterUser(UserRequest userRequest)
     {
+        if (!IsEmailValid(userRequest.Email))
+        {
+            throw new AuthException(EMAIL_FORMAT);
+        }
+
         if (await _usersRepository.GetUserByEmail(userRequest.Email) != null)
         {
             throw new AuthException(EMAIL_TAKEN);
@@ -80,5 +87,21 @@ public class AuthService : IAuthService
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private static bool IsEmailValid(string email)
+    {
+        var valid = true;
+
+        try
+        {
+            var emailAddress = new MailAddress(email);
+        }
+        catch
+        {
+            valid = false;
+        }
+
+        return valid;
     }
 }
