@@ -9,7 +9,7 @@ public interface IProductService
     Task<ProductResponse> GetProductById(int id);
     Task<List<ProductResponse>> AddProduct(ProductRequest productRequest);
     Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest);
-    Task<List<ProductResponse>?> DeleteProduct(int id);
+    Task<bool> DeleteProduct(int id);
     Task<List<ProductResponse>> FilterProducts(ProductFilterRequest filter);
 
 }

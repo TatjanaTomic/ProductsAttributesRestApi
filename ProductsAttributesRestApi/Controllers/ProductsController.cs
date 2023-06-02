@@ -86,13 +86,10 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<ProductResponse>?>> DeleteProduct(int id)
+    public async Task<ActionResult> DeleteProduct(int id)
     {
         var result = await _productService.DeleteProduct(id);
 
-        if (result is null)
-            return NotFound();
-
-        return Ok(result);
+        return result ? Ok() : NotFound();
     }
 }

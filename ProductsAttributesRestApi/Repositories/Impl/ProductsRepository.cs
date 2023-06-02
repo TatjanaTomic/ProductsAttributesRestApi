@@ -45,17 +45,17 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         return await _dataContext.Products.ToListAsync();
     }
 
-    public async Task<List<Product>?> DeleteProduct(int id)
+    public async Task<bool> DeleteProduct(int id)
     {
         var result = await _dataContext.Products.FindAsync(id);
 
         if (result is null)
-            return null;
+            return false;
 
         _dataContext.Products.Remove(result);
         await _dataContext.SaveChangesAsync();
 
-        return await _dataContext.Products.ToListAsync();
+        return true;
     }
 
     public async Task<List<ProductAttribute>> GetProductAttributes(int id)

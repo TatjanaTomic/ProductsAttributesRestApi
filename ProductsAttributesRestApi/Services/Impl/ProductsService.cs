@@ -62,14 +62,9 @@ public class ProductsService : IProductService
         return _mapper.Map<List<ProductResponse>>(result);
     }
 
-    public async Task<List<ProductResponse>?> DeleteProduct(int id)
+    public async Task<bool> DeleteProduct(int id)
     {
-        var result = await _productsRepository.DeleteProduct(id);
-
-        if (result is null)
-            return null;
-
-        return _mapper.Map<List<ProductResponse>>(result);
+        return await _productsRepository.DeleteProduct(id);
     }
 
     public async Task<List<ProductResponse>> FilterProducts(ProductFilterRequest filter)
