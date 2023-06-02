@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductsAttributesRestApi.Exceptions;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Services;
 
@@ -31,12 +32,14 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<ProductResponse>> GetProductById(int id)
     {
-        var result = await _productService.GetProductById(id);
-
-        if (result is null)
+        try {
+            var result = await _productService.GetProductById(id);
+            return Ok(result);
+        }
+        catch (NotFoundException)
+        {
             return NotFound();
-
-        return Ok(result);
+        }  
     }
 
     [HttpPost("filter")]
