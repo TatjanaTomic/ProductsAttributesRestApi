@@ -42,35 +42,11 @@ public class ProductsController : ControllerBase
         }  
     }
 
-    [HttpPost("filter")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<ProductResponse>>> FilterProducts([FromBody] ProductFilterRequest filter)
-    {
-        if (filter is null || !ModelState.IsValid)
-            return BadRequest();
-
-        var result = await _productService.FilterProducts(filter);
-        return Ok(result);
-    }
-
-    [HttpPost("filter/attributes")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<ProductResponse>>> FilterProductsByAttribute([FromBody] AttributeValueFilter filter)
-    {
-        if (filter is null || !ModelState.IsValid)
-            return BadRequest();
-
-        var result = await _productService.FilterProductsByAttribute(filter);
-        return Ok(result);
-    }
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<ProductResponse>>> AddProduct([FromBody] ProductRequest productRequest)
+    public async Task<ActionResult<ProductResponse>> AddProduct([FromBody] ProductRequest productRequest)
     {
         if (productRequest is null || !ModelState.IsValid)
             return BadRequest();
@@ -106,5 +82,29 @@ public class ProductsController : ControllerBase
         var result = await _productService.DeleteProduct(id);
 
         return result ? Ok() : NotFound();
+    }
+
+    [HttpPost("filter")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<ProductResponse>>> FilterProducts([FromBody] ProductFilterRequest filter)
+    {
+        if (filter is null || !ModelState.IsValid)
+            return BadRequest();
+
+        var result = await _productService.FilterProducts(filter);
+        return Ok(result);
+    }
+
+    [HttpPost("filter/attributes")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<ProductResponse>>> FilterProductsByAttribute([FromBody] AttributeValueFilter filter)
+    {
+        if (filter is null || !ModelState.IsValid)
+            return BadRequest();
+
+        var result = await _productService.FilterProductsByAttribute(filter);
+        return Ok(result);
     }
 }

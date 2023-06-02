@@ -21,11 +21,26 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         return await _dataContext.Products.FindAsync(id);
     }
 
-    public async Task<List<Product>> AddProduct(Product product)
+    public async Task<Product> AddProduct(Product product)
     {
-        _dataContext.Products.Add(product);
+        var productEntity = await _dataContext.Products.AddAsync(product);
         _dataContext.SaveChanges();
-        return await _dataContext.Products.ToListAsync();
+        return productEntity.Entity;
+    }
+
+    public async Task AddProductAttributes(int idProduct, int idAttribute, string value)
+    {
+        var pa = await _dataContext.ProductAttributes.SingleOrDefaultAsync(pa => pa.ProductId == idProduct && pa.AttributeId == idAttribute);
+        if (pa == null)
+        {
+            _dataContext.ProductAttributes.Add(new ProductAttribute() { AttributeId = idAttribute, ProductId = idProduct, Value = value });
+            await _dataContext.SaveChangesAsync();
+        }
+        else
+        {
+            pa.Value = value; 
+            await _dataContext.SaveChangesAsync();
+        }
     }
 
     public async Task<List<Product>?> UpdateProduct(int id, Product product)

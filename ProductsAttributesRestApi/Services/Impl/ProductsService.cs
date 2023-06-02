@@ -39,11 +39,19 @@ public class ProductsService : IProductService
         return result;
     }
 
-    public async Task<List<ProductResponse>> AddProduct(ProductRequest productRequest)
+    public async Task<ProductResponse> AddProduct(ProductRequest productRequest)
     {
         var product = _mapper.Map<Product>(productRequest);
+
         var result = await _productsRepository.AddProduct(product);
-        return _mapper.Map<List<ProductResponse>>(result);
+        foreach(var av in productRequest.AttributesValues)
+        {
+            await _productsRepository.AddProductAttributes(result.Id, av.Attribute.Id, av.Value);
+        }
+
+        var responseProduct = _mapper.Map<ProductResponse>(result);
+        responseProduct.AttributesValues = _mapper.Map<List<AttributeValue>>(await _productsRepository.GetProductAttributes(result.Id));
+        return responseProduct;
     }
 
     public async Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest)

@@ -7,7 +7,7 @@ public interface IProductService
 {
     Task<List<ProductResponse>> GetAllProducts();
     Task<ProductResponse> GetProductById(int id);
-    Task<List<ProductResponse>> AddProduct(ProductRequest productRequest);
+    Task<ProductResponse> AddProduct(ProductRequest productRequest);
     Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest);
     Task<bool> DeleteProduct(int id);
     Task<List<ProductResponse>> FilterProducts(ProductFilterRequest filter);
