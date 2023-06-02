@@ -17,6 +17,9 @@ public class MappingProfile : Profile
         CreateMap<ProductRequest, Product>();
         CreateMap<ProductResponse, Product>();
         CreateMap<Product, ProductResponse>();
+
+        CreateMap<ProductAttribute, AttributeValue>();
+        CreateMap<AttributeValue, ProductAttribute>();
         
         CreateMap<User, UserRequest>();
         CreateMap<UserRequest, User>();

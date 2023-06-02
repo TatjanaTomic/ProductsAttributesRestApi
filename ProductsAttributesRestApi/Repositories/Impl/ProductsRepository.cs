@@ -58,6 +58,14 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         return await _dataContext.Products.ToListAsync();
     }
 
+    public async Task<List<ProductAttribute>> GetProductAttributes(int id)
+    {
+        var result = await _dataContext.ProductAttributes.Where(pa => pa.ProductId == id).ToListAsync();
+        foreach (var r in result)
+            r.Attribute = _dataContext.Attributes.Find(r.AttributeId)!;
+        return result;
+    }
+
     public async Task<List<Product>> FilterProducts(ProductFilterRequest filter)
     {
         return await _dataContext.Products
