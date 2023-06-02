@@ -54,16 +54,27 @@ public class ProductsService : IProductService
         return responseProduct;
     }
 
-    public async Task<List<ProductResponse>?> UpdateProduct(int id, ProductRequest productRequest)
+    public async Task<ProductResponse> UpdateProduct(int id, ProductRequest productRequest)
     {
         var product = _mapper.Map<Product>(productRequest);
         product.Id = id;
 
-        var result = await _productsRepository.UpdateProduct(id, product);
-        if (result is null)
-            return null;
+        try
+        {
+            var result = await _productsRepository.UpdateProduct(id, product);
+            foreach (var av in productRequest.AttributesValues)
+            {
+                await _productsRepository.AddProductAttributes(result.Id, av.Attribute.Id, av.Value);
+            }
 
-        return _mapper.Map<List<ProductResponse>>(result);
+            var responseProduct = _mapper.Map<ProductResponse>(result);
+            responseProduct.AttributesValues = _mapper.Map<List<AttributeValue>>(await _productsRepository.GetProductAttributes(result.Id));
+            return responseProduct;
+        }
+        catch(NotFoundException e)
+        {
+            throw e;
+        }
     }
 
     public async Task<bool> DeleteProduct(int id)

@@ -59,17 +59,20 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<ProductResponse>?>> UpdateProduct(int id, [FromBody] ProductRequest product)
+    public async Task<ActionResult<ProductResponse>> UpdateProduct(int id, [FromBody] ProductRequest product)
     {
         if (product is null || !ModelState.IsValid)
             return BadRequest();
 
-        var result = await _productService.UpdateProduct(id, product);
-
-        if(result is null)
+        try
+        {
+            var result = await _productService.UpdateProduct(id, product);
+            return Ok(result);
+        }
+        catch(NotFoundException) 
+        {
             return NotFound();
-
-        return Ok(result);
+        }
     }
 
 

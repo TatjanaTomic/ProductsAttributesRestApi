@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsAttributesAPI.Data;
+using ProductsAttributesRestApi.Exceptions;
 using ProductsAttributesRestApi.Models.Dtos;
 using ProductsAttributesRestApi.Models.Entities;
 
@@ -43,21 +44,18 @@ public class ProductsRepository : BaseRepository, IProductsRepository
         }
     }
 
-    public async Task<List<Product>?> UpdateProduct(int id, Product product)
+    public async Task<Product> UpdateProduct(int id, Product product)
     {
-        var result = _dataContext.Products.Find(id);
-
-        if (result is null)
-            return null;
+        var result = _dataContext.Products.Find(id) ?? throw new NotFoundException();
 
         result.Name = product.Name;
         result.Manufacturer = product.Manufacturer;
         result.Code = product.Code;
         result.UnitOfMeasurement = product.UnitOfMeasurement;
 
-        _dataContext.SaveChanges();
+        await _dataContext.SaveChangesAsync();
 
-        return await _dataContext.Products.ToListAsync();
+        return result;
     }
 
     public async Task<bool> DeleteProduct(int id)
