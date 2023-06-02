@@ -7,7 +7,7 @@ using ProductsAttributesRestApi.Services;
 
 namespace ProductsAttributesRestApi.Controllers;
 
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
 public class AttributesController : ControllerBase
