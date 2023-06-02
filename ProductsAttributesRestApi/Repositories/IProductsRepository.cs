@@ -12,4 +12,5 @@ public interface IProductsRepository
     Task<bool> DeleteProduct(int id);
     Task<List<ProductAttribute>> GetProductAttributes(int id);
     Task<List<Product>> FilterProducts(ProductFilterRequest filter);
+    Task<List<Product>> FilterProductsByAttributes(AttributeValueFilter filter);
 }

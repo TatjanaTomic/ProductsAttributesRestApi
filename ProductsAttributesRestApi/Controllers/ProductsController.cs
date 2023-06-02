@@ -54,6 +54,18 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("filter/attributes")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<List<ProductResponse>>> FilterProductsByAttribute([FromBody] AttributeValueFilter filter)
+    {
+        if (filter is null || !ModelState.IsValid)
+            return BadRequest();
+
+        var result = await _productService.FilterProductsByAttribute(filter);
+        return Ok(result);
+    }
+
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
