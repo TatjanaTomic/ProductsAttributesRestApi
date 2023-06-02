@@ -29,7 +29,7 @@ public class AttributesRepository : BaseRepository, IAttributesRepository
 
     public async Task<Attribute> UpdateAttribute(int id, Attribute attribute)
     {
-        var result = await _dataContext.Attributes.FindAsync(id);
+        var result = await _dataContext.Attributes.FindAsync(id) ?? throw new NotFoundException();
         
         result.Name = attribute.Name;
         result.Units = attribute.Units;
@@ -39,16 +39,16 @@ public class AttributesRepository : BaseRepository, IAttributesRepository
         return result;
     }
 
-    public async Task<List<Attribute>?> DeleteAttribute(int id)
+    public async Task<bool> DeleteAttribute(int id)
     {
         var result = await _dataContext.Attributes.FindAsync(id);
 
         if (result is null)
-            return null;
+            return false;
 
         _dataContext.Attributes.Remove(result);
         await _dataContext.SaveChangesAsync();
 
-        return await _dataContext.Attributes.ToListAsync();
+        return true;
     }
 }

@@ -59,7 +59,7 @@ public class AttributesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<AttributeResponse>?>> UpdateAttribute(int id, [FromBody] AttributeRequest attributeRequest)
+    public async Task<ActionResult<AttributeResponse>> UpdateAttribute(int id, [FromBody] AttributeRequest attributeRequest)
     {
         if (attributeRequest is null || !ModelState.IsValid)
             return BadRequest();
@@ -80,13 +80,10 @@ public class AttributesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<AttributeResponse>?>> DeleteAttribute(int id)
+    public async Task<ActionResult> DeleteAttribute(int id)
     {
         var result = await _attributeService.DeleteAttribute(id);
 
-        if (result is null)
-            return NotFound();
-
-        return Ok(result);
+        return result ? Ok() : NotFound();
     }
 }

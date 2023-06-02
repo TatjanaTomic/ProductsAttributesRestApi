@@ -40,23 +40,21 @@ public class AttributesService : IAttributesService
 
     public async Task<AttributeResponse> UpdateAttribute(int id, AttributeRequest attributeRequest)
     {
-        if(await _attributesRepository.GetAttributeById(id) is null)
-            throw new NotFoundException();
-
         var attribute = _mapper.Map<Attribute>(attributeRequest);
         attribute.Id = id;
-
-        var result = await _attributesRepository.UpdateAttribute(id, attribute);
-        return _mapper.Map<AttributeResponse>(result);
+        try
+        {
+            var result = await _attributesRepository.UpdateAttribute(id, attribute);
+            return _mapper.Map<AttributeResponse>(result);
+        }
+        catch(NotFoundException e)
+        {
+            throw e;
+        }
     }
 
-    public async Task<List<AttributeResponse>?> DeleteAttribute(int id)
+    public async Task<bool> DeleteAttribute(int id)
     {
-        var result = await _attributesRepository.DeleteAttribute(id);
-
-        if (result is null)
-            return null;
-
-        return _mapper.Map<List<AttributeResponse>>(result);
+        return await _attributesRepository.DeleteAttribute(id);
     }
 }
