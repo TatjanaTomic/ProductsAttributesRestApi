@@ -7,7 +7,7 @@ using ProductsAttributesRestApi.Services;
 
 namespace ProductsAttributesRestApi.Controllers;
 
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
 public class ProductsController : ControllerBase
@@ -100,5 +100,6 @@ public class ProductsController : ControllerBase
         var result = await _productService.FilterProducts(filter);
         return Ok(result);
     }
+
 
 }
