@@ -13,5 +13,4 @@ public interface IProductsRepository
     Task<List<ProductAttribute>> GetProductAttributes(int id);
     Task AddProductAttributes(int idProduct, int idAttribute, string value);
     Task<List<Product>> FilterProducts(ProductFilterRequest filter);
-    Task<List<Product>> FilterProductsByAttributes(AttributeValueFilter filter);
 }

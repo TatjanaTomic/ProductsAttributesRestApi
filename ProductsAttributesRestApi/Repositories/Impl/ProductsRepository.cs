@@ -87,21 +87,7 @@ public class ProductsRepository : BaseRepository, IProductsRepository
             .Where(p => filter.Code == null || filter.Code == p.Code)
             .Where(p => filter.Manufacturer == null || filter.Manufacturer == p.Manufacturer)
             .Where(p => filter.UnitOfMeasurement == null || filter.UnitOfMeasurement == p.UnitOfMeasurement)
+            .Include(p => p.ProductAttributes)
             .ToListAsync();
-    }
-
-    public async Task<List<Product>> FilterProductsByAttributes(AttributeValueFilter filter)
-    {
-        var productsAttributes = await _dataContext.ProductAttributes
-            .Where(pa => pa.AttributeId == filter.AttributeId && pa.Value == filter.Value).ToListAsync();
-
-        List<Product> products = new();
-        foreach(var pa in productsAttributes)
-        {
-            var product = await _dataContext.Products.FindAsync(pa.ProductId);
-            if(product is not null)
-                products.Add(product);
-        }
-        return products;
     }
 }

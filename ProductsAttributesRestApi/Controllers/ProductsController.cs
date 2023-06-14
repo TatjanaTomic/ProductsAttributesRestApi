@@ -7,7 +7,7 @@ using ProductsAttributesRestApi.Services;
 
 namespace ProductsAttributesRestApi.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [Route("api/[controller]")]
 [ApiController]
 public class ProductsController : ControllerBase
@@ -101,15 +101,4 @@ public class ProductsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("filter/attributes")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<ActionResult<List<ProductResponse>>> FilterProductsByAttribute([FromBody] AttributeValueFilter filter)
-    {
-        if (filter is null || !ModelState.IsValid)
-            return BadRequest();
-
-        var result = await _productService.FilterProductsByAttribute(filter);
-        return Ok(result);
-    }
 }

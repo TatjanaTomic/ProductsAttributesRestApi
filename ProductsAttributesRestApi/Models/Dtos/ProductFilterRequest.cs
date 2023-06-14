@@ -7,4 +7,5 @@ public class ProductFilterRequest
     public string? Code { get; set; }
     public string? Manufacturer { get; set; }
     public string? UnitOfMeasurement { get; set; }
+    public List<AttributeValue> AttributesValues { get; set; } = new();
 }

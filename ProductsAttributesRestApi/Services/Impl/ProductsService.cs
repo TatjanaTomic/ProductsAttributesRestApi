@@ -86,21 +86,7 @@ public class ProductsService : IProductService
     {
         var result = await _productsRepository.FilterProducts(filter);
         var products = _mapper.Map<List<ProductResponse>>(result);
-        foreach(var p in products)
-        {
-            p.AttributesValues = _mapper.Map<List<AttributeValue>>(await _productsRepository.GetProductAttributes(p.Id));
-        }
         return products;
     }
 
-    public async Task<List<ProductResponse>> FilterProductsByAttribute(AttributeValueFilter filter)
-    {
-        var result = await _productsRepository.FilterProductsByAttributes(filter);
-        var products = _mapper.Map<List<ProductResponse>>(result);
-        foreach (var p in products)
-        {
-            p.AttributesValues = _mapper.Map<List<AttributeValue>>(await _productsRepository.GetProductAttributes(p.Id));
-        }
-        return products;
-    }
 }
