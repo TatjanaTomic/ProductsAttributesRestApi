@@ -9,8 +9,5 @@ public class Attribute
     public string Name { get; set; } = null!;
     public string? Units { get; set; }
     [JsonIgnore]
-    public List<Product> Products { get; set; } = new();
-    [JsonIgnore]
-    [NotMapped]
     public List<ProductAttribute> ProductAttributes { get; set; } = new();
 }

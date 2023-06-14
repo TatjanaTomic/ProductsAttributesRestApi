@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductsAttributesRestApi.Models.Entities;
+using System.Reflection;
 
 namespace ProductsAttributesAPI.Data;
 
@@ -17,6 +18,7 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        /*
         modelBuilder.Entity<Product>()
             .HasMany(a => a.Attributes)
             .WithMany(p => p.Products)
@@ -27,8 +29,10 @@ public class DataContext : DbContext
                     pa.HasKey(prop => new { prop.ProductId, prop.AttributeId });
                 }
             );
+        */
 
         base.OnModelCreating(modelBuilder);
+
     }
 
     public DbSet<Product> Products { get; set; } = null!;
